@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="./style.css">
+	<title>Daftar Mata Kuliah 4A</title>
+	<style>
+		input[type="checkbox"] + label {
+			text-decoration: none;
+		}
+
+		input[type="checkbox"]:checked + label {
+			text-decoration: line-through;
+		}
+	</style>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<h1>Daftar Mata Kuliah Kelas 4 A</h1>
+		<form v-on:submit.prevent="addCourse">
+			<label for="nama">Nama Mata Kuliah:</label><br>
+			<input type="text" id="nama" v-model="newCourse" required><br>
+			<button type="submit">Tambah</button>
+		</form>
+		<br>
+		<label for="filter">Filter:</label>
+		<input type="text" id="filter" v-model="filter"><br><br>
+		<ul>
+			<li v-for="(course, index) in filteredCourses" :key="index">
+				<input type="checkbox" :id="'course-' + index" v-model="course.completed">
+				<label :for="'course-' + index">{{ course.name }}</label>
+				<button v-on:click="removeCourse(index)">Hapus</button>
+			</li>
+		</ul>
+	</div>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				courses: [
+					{name: 'Matematika Diskrit', completed: false},
+					{name: 'Pemrograman Beroientasi Objek', completed: false},
+					{name: 'Pemrograman Berbasis Komponen', completed: true},
+					{name: 'Jaringan Komputer', completed: false},
+				],
+				newCourse: '',
+				filter: ''
+			},
+			methods: {
+				addCourse: function() {
+					this.courses.push({
+						name: this.newCourse,
+						completed: false
+					});
+					this.newCourse = '';
+				},
+				removeCourse: function(index) {
+					this.courses.splice(index, 1);
+				}
+			},
+			computed: {
+				filteredCourses: function() {
+					return this.courses.filter(course => course.name.toLowerCase().includes(this.filter.toLowerCase()));
+				}
+			}
+		})
+	</script>
+</body>
+</html>
